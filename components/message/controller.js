@@ -1,4 +1,7 @@
 const store = require('./store');
+const socket = require('../../socket').socket;
+const config = require('../../config');
+
 
 //Primero agregamos mensajes a la base de datos
 function addMessage(chat, user, message, file) {
@@ -11,7 +14,7 @@ function addMessage(chat, user, message, file) {
 
         let fileUrl = '';
         if(file) {
-            fileUrl = 'http://localhost:3000/app/files/' + file.filename;
+            fileUrl = `${config.host}:${config.port}/app/files/` + file.filename;
         }
 
         const fullMessage = {
@@ -23,6 +26,9 @@ function addMessage(chat, user, message, file) {
         };
 
         store.add(fullMessage);
+
+        socket.io.emit('message', fullMessage);
+
         resolve(fullMessage);
     });
   
