@@ -2,9 +2,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const db = require('./db');
+
 //const router = require('./components/message/network');
 const router = require('./network/routes');
 
+//Conexion a la base de datos desde el servidor
+db('mongodb://localhost/telegrom');
 
 //Utilazar expres para iniciar
 var app = express();

@@ -1,14 +1,65 @@
-const list = [];
 
+const Model = require('./model');
+
+//agregar informacion a mongoose
 function addMessage(message) {
-    list.push(message);
+    //list.push(message);
+    const myMessage = new Model(message);
+    myMessage.save();
+}
+    
+async function getMessages(filterUser) {
+    let filter = {}
+    if(filterUser !== null) {
+        filter = { user: filterUser };
+    }
+    //return list;
+    const messages = await Model.find(filter);
+    return messages;
 }
 
-function getMessages() {
-    return list;
+async function updateText(id, message) {
+    const foundMessage = await Model.findOne({
+        _id: id
+    });
+
+    foundMessage.message = message;
+
+    const newMessage = foundMessage.save();
+    return newMessage;
+}
+
+function removeMessage(id) {
+    return Model.deleteOne({
+        _id: id
+    });
 }
 
 module.exports = {
     add: addMessage,
     list: getMessages,
+    updateText: updateText,
+    remove: removeMessage,
+    //delete
 }
+
+
+
+//Forma de crear un simulador de base de datos para pruebas
+// const list = [];
+
+// function addMessage(message) {
+//     list.push(message);
+// }
+
+// function getMessages() {
+//     return list;
+// }
+
+// module.exports = {
+//     add: addMessage,
+//     list: getMessages,
+//     //get
+//     //update
+//     //delete
+// }
