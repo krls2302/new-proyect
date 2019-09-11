@@ -1,12 +1,20 @@
 const express = require('express');
+const multer = require('multer');
+
 const response = require('../../network/response');
 const controller = require('./controller');
 
+//Exportar routes de express
 const router = express.Router();
+
+//importamos multer para que sea utilizado
+const upload = multer({
+    dest: 'public/files/'
+});
 
 
 router.get('/', function (req, res) {
-    const filterMessages = req.query.user || null;
+    const filterMessages = req.query.chat || null;
     controller.getMessages(filterMessages)
         .then((messageList) => {
             response.success(req, res, messageList, 200);
@@ -16,9 +24,9 @@ router.get('/', function (req, res) {
         })
 });
 
-router.post('/', function (req, res) {
+router.post('/', upload.single('file'), function (req, res) {
     //Llamamos los controladores que vienen en la cabezera
-    controller.addMessage(req.body.user, req.body.message)
+    controller.addMessage(req.body.chat, req.body.user, req.body.message, req.file)
         .then((fullMessage) => {
             response.success(req, res, fullMessage, 201);
         })

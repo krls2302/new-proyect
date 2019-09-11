@@ -2,29 +2,27 @@
 const store = require('./store');
 
 //funtion para agregar el usuario y almacenarlo
-function addUser(name) {
+function addChat(users) {
     //realizamos la validacion y hacemos una promesa
-    if(!name) {
-        return Promise.reject('Invalid name');
+    if(!users || !Array.isArray(users)) {
+        return Promise.reject('Invalid user list');
     }
-
     //Realizamos el paso de user que resive por paramatro del clientes
-    const user = {
-        name,
+    const chat = {
+        users: users,
     };
-
     //retornamos el add al stores
-    return store.add(user);
+    return store.add(chat);
 }
 
 //funtion para listar los usuarios
-function listUser() {
-    return store.list();
+function listChats(userId) {
+    return store.list(userId);
 }
 
 
 //Exportamos el valor de modulos de clientes
 module.exports = {
-    addUser,
-    listUser,
+    addChat,
+    listChats,
 }
